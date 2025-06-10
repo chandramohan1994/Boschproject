@@ -1,0 +1,95 @@
+{
+	"name": "CopyNYCTripData-N",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.fileList\n",
+						"type": "Expression"
+					},
+					"batchCount": 1,
+					"activities": [
+						{
+							"name": "CopyFile",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "HTTP_TripData_Binary",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileUrl": "@item().source"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ADLS_TripData_Binary",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"fileList": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"source": "trip-data/yellow_tripdata_2024-06.parquet",
+						"destination": "yellow/yellow_tripdata_2024-06.parquet"
+					},
+					{
+						"source": "trip-data/yellow_tripdata_2024-07.parquet",
+						"destination": "yellow/yellow_tripdata_2024-07.parquet"
+					},
+					{
+						"source": "trip-data/yellow_tripdata_2024-08.parquet",
+						"destination": "yellow/yellow_tripdata_2024-08.parquet"
+					},
+					{
+						"source": "misc/taxi+_zone_lookup.csv",
+						"destination": "reference/taxi_zone_lookup.csv"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-06-10T03:28:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

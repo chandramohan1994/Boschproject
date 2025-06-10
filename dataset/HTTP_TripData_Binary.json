@@ -1,0 +1,26 @@
+{
+	"name": "HTTP_TripData_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HTTP_NYC_TripData",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileUrl": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().fileUrl",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

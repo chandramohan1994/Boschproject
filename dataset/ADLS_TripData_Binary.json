@@ -1,0 +1,26 @@
+{
+	"name": "ADLS_TripData_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Boschprojectadls2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@substring(item().destination, add(lastIndexOf(item().destination, '/'), 1))",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@substring(item().destination, 0, lastIndexOf(item().destination, '/'))",
+					"type": "Expression"
+				},
+				"fileSystem": "raw"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

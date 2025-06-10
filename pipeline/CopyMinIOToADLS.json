@@ -1,0 +1,107 @@
+{
+	"name": "CopyMinIOToADLS",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoopOverFiles",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.fileList\n",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "CopyFile",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ParquetSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "ParquetReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "HttpSourceFile",
+									"type": "DatasetReference",
+									"parameters": {
+										"filePath": "@replace(item().source, 'https://f2d0-142-188-167-248.ngrok-free.app', '')"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AdlsSinkFile",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"fileList": {
+				"type": "string",
+				"defaultValue": [
+					{
+						"source": "https://f2d0-142-188-167-248.ngrok-free.app/taxi-bucket/taxi-data/yellow_tripdata_2024-06.parquet",
+						"destination": "yellow/yellow_tripdata_2024-06.parquet"
+					},
+					{
+						"source": "https://f2d0-142-188-167-248.ngrok-free.app/taxi-bucket/taxi-data/yellow_tripdata_2024-07.parquet",
+						"destination": "yellow/yellow_tripdata_2024-07.parquet"
+					},
+					{
+						"source": "https://f2d0-142-188-167-248.ngrok-free.app/taxi-bucket/taxi-data/yellow_tripdata_2024-08.parquet",
+						"destination": "yellow/yellow_tripdata_2024-08.parquet"
+					},
+					{
+						"source": "https://f2d0-142-188-167-248.ngrok-free.app/taxi-bucket/reference/taxi_zone_lookup.csv",
+						"destination": "reference/taxi_zone_lookup.csv"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-06-10T00:35:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

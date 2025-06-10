@@ -1,0 +1,28 @@
+{
+	"name": "AdlsSinkFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Boschprojectadls2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@substring(item().destination, add(lastIndexOf(item().destination, '/'), 1))",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@substring(item().destination, 0, lastIndexOf(item().destination, '/'))",
+					"type": "Expression"
+				},
+				"fileSystem": "raw"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

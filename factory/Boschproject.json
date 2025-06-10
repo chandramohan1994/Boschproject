@@ -1,0 +1,9 @@
+{
+	"name": "Boschproject",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "599e8406-4899-4618-a4b7-6244f1fe57ac",
+		"tenantId": "e3ac877a-8939-4447-b985-6a4de4344947"
+	}
+}
